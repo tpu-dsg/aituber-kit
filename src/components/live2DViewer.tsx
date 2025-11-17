@@ -66,7 +66,7 @@ export default function Live2DViewer() {
 
   console.log('Rendering Live2DViewer')
   return (
-    <div className="fixed bottom-0 right-0 w-screen h-screen z-5">
+    <div className="absolute inset-0 z-5">
       <Script
         key={`cubismcore-${scriptLoadRetries.cubismcore}`}
         src="/scripts/live2dcubismcore.min.js"

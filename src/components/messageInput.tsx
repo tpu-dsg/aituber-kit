@@ -345,7 +345,7 @@ export const MessageInput = ({
   }
 
   return (
-    <div className="absolute bottom-0 z-20 w-screen">
+    <div className="absolute bottom-0 z-20 w-full">
       {showPermissionModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded-2xl max-w-md">
