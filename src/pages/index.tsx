@@ -33,6 +33,7 @@ const Home = () => {
         : `url(${buildUrl(backgroundImageUrl)})`
   const messageReceiverEnabled = settingsStore((s) => s.messageReceiverEnabled)
   const modelType = settingsStore((s) => s.modelType)
+  const showGamePanel = settingsStore((s) => s.showGamePanel)
   const { t } = useTranslation()
   const characterPresets = [
     {
@@ -104,7 +105,9 @@ const Home = () => {
       <Meta />
       <Introduction />
       <div className="flex h-full flex-col md:flex-row">
-        <div className="relative flex-1 overflow-hidden border-b border-white/10 md:border-b-0 md:border-r">
+        <div
+          className={`relative flex-1 overflow-hidden border-b border-white/10 md:border-b-0 ${showGamePanel ? 'md:border-r' : ''}`}
+        >
           {modelType === 'vrm' ? <VrmViewer /> : <Live2DViewer />}
           <Form />
           <Menu />
@@ -112,9 +115,11 @@ const Home = () => {
           <CharacterPresetMenu />
           <ImageOverlay />
         </div>
-        <div className="flex-1 bg-black/50">
-          <GamePanel />
-        </div>
+        {showGamePanel && (
+          <div className="flex-1 bg-black/50">
+            <GamePanel />
+          </div>
+        )}
       </div>
       {messageReceiverEnabled && <MessageReceiver />}
       <Toasts />

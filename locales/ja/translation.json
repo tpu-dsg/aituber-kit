@@ -373,6 +373,7 @@
   "GamePanelNoUrl": "ゲーム設定で表示用URLがまだ設定されていません。",
   "GamePanelNoSelection": "現在選択されているゲームはありません。",
   "GamePanelLaunch": "別タブで開く",
+  "GamePanelToggle": "ゲーム画面",
   "EnterPresetQuestion": "質問を入力してください",
   "DragToReorder": "ドラッグして順番を変更",
   "Edit": "編集",

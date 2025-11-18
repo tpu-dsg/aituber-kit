@@ -353,6 +353,7 @@
   "GamePanelNoUrl": "Display URL is not configured in Game Settings.",
   "GamePanelNoSelection": "No game has been selected.",
   "GamePanelLaunch": "Open in new tab",
+  "GamePanelToggle": "Game panel",
   "EnterPresetQuestion": "Please enter a question",
   "DragToReorder": "Drag to change order",
   "CustomAPIEndpoint": "Custom API endpoint",

@@ -51,6 +51,7 @@ export const Menu = () => {
   const chatLog = homeStore((s) => s.chatLog)
   const showWebcam = menuStore((s) => s.showWebcam)
   const showControlPanel = settingsStore((s) => s.showControlPanel)
+  const showGamePanel = settingsStore((s) => s.showGamePanel)
   const showCapture = menuStore((s) => s.showCapture)
   const slidePlaying = slideStore((s) => s.isPlaying)
   const showAssistantText = settingsStore((s) => s.showAssistantText)
@@ -304,8 +305,25 @@ export const Menu = () => {
                   />
                 </div>
               )}
+              <div className="order-5">
+                <IconButton
+                  iconName="game-panel"
+                  label={t('GamePanelToggle')}
+                  isProcessing={false}
+                  backgroundColor={
+                    showGamePanel
+                      ? undefined
+                      : 'bg-white/80 hover:bg-white text-primary'
+                  }
+                  onClick={() =>
+                    settingsStore.setState((state) => ({
+                      showGamePanel: !state.showGamePanel,
+                    }))
+                  }
+                />
+              </div>
               {slideMode && (
-                <div className="order-5">
+                <div className="order-6">
                   <IconButton
                     iconName="24/FrameEffect"
                     isProcessing={false}
