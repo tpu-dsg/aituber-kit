@@ -18,6 +18,7 @@ import '@/lib/i18n'
 import { buildUrl } from '@/utils/buildUrl'
 import { YoutubeManager } from '@/components/youtubeManager'
 import toastStore from '@/features/stores/toast'
+import GamePanel from '@/components/gamePanel'
 
 const Home = () => {
   const webcamStatus = homeStore((s) => s.webcamStatus)
@@ -32,6 +33,7 @@ const Home = () => {
         : `url(${buildUrl(backgroundImageUrl)})`
   const messageReceiverEnabled = settingsStore((s) => s.messageReceiverEnabled)
   const modelType = settingsStore((s) => s.modelType)
+  const showGamePanel = settingsStore((s) => s.showGamePanel)
   const { t } = useTranslation()
   const characterPresets = [
     {
@@ -99,19 +101,30 @@ const Home = () => {
         : { backgroundImage: bgUrl }
 
   return (
-    <div className="h-[100svh] bg-cover" style={backgroundStyle}>
+    <div className="relative h-[100svh] bg-cover" style={backgroundStyle}>
       <Meta />
       <Introduction />
-      {modelType === 'vrm' ? <VrmViewer /> : <Live2DViewer />}
-      <Form />
-      <Menu />
-      <ModalImage />
+      <div className="flex h-full flex-col md:flex-row">
+        <div
+          className={`relative flex-1 overflow-hidden border-b border-white/10 md:border-b-0 ${showGamePanel ? 'md:border-r' : ''}`}
+        >
+          {modelType === 'vrm' ? <VrmViewer /> : <Live2DViewer />}
+          <Form />
+          <Menu />
+          <ModalImage />
+          <CharacterPresetMenu />
+          <ImageOverlay />
+        </div>
+        {showGamePanel && (
+          <div className="flex-1 bg-black/50">
+            <GamePanel />
+          </div>
+        )}
+      </div>
       {messageReceiverEnabled && <MessageReceiver />}
       <Toasts />
       <WebSocketManager />
       <YoutubeManager />
-      <CharacterPresetMenu />
-      <ImageOverlay />
     </div>
   )
 }

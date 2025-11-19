@@ -71,4 +71,3 @@ public/scripts/*
 !/public/images/placed/.keep
 
 .claude/settings.local.json
-
