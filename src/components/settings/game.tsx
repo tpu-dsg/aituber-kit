@@ -3,6 +3,7 @@
 import { FormEvent, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import gameStore, { RegisteredGame } from '@/features/stores/game'
+import settingsStore from '@/features/stores/settings'
 
 const emptyForm: Omit<RegisteredGame, 'id'> = {
   name: '',
@@ -18,6 +19,7 @@ const Game = () => {
   const upsertGame = gameStore((s) => s.upsertGame)
   const removeGame = gameStore((s) => s.removeGame)
   const selectGame = gameStore((s) => s.selectGame)
+  const showGamePanel = settingsStore((s) => s.showGamePanel)
 
   const [form, setForm] = useState(emptyForm)
   const [editingId, setEditingId] = useState<string | null>(null)
@@ -70,6 +72,32 @@ const Game = () => {
         <p className="mt-2 text-sm text-text2">
           {t('GameSettingsDescription')}
         </p>
+      </div>
+
+      <div className="space-y-6 rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+        <div className="flex items-center justify-between gap-4">
+          <div>
+            <p className="text-lg font-semibold">{t('GamePanelVisibility')}</p>
+            <p className="text-sm text-text2">
+              {t('GamePanelVisibilityDescription')}
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={() =>
+              settingsStore.setState((state) => ({
+                showGamePanel: !state.showGamePanel,
+              }))
+            }
+            className={`rounded-full px-4 py-2 text-sm font-semibold transition ${
+              showGamePanel
+                ? 'bg-secondary text-theme hover:bg-secondary-hover'
+                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+            }`}
+          >
+            {showGamePanel ? t('GamePanelVisible') : t('GamePanelHidden')}
+          </button>
+        </div>
       </div>
 
       <div className="grid gap-8 lg:grid-cols-2">
