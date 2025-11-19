@@ -3,6 +3,7 @@
 import { FormEvent, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import gameStore, { RegisteredGame } from '@/features/stores/game'
+import settingsStore from '@/features/stores/settings'
 
 const emptyForm: Omit<RegisteredGame, 'id'> = {
   name: '',
@@ -18,6 +19,7 @@ const Game = () => {
   const upsertGame = gameStore((s) => s.upsertGame)
   const removeGame = gameStore((s) => s.removeGame)
   const selectGame = gameStore((s) => s.selectGame)
+  const showGamePanel = settingsStore((s) => s.showGamePanel)
 
   const [form, setForm] = useState(emptyForm)
   const [editingId, setEditingId] = useState<string | null>(null)
