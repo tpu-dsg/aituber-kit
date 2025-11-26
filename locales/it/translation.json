@@ -457,5 +457,14 @@
   "ImageSettings": "Impostazioni immagine",
   "Energetic": "Energia",
   "UsingAivisCloudAPI": "Usa Aivis Cloud API",
-  "AivisCloudAPIInfo": "Impostazioni API di Aivis Cloud"
+  "AivisCloudAPIInfo": "Impostazioni API di Aivis Cloud",
+  "Motion.TagSettings": "Emotion Tags",
+  "Motion.TagSettingsInfo": "Set the emotion tag strings you use in your system prompt. The first matching tag in brackets (e.g. [happy]) is used to decide which emotion to play.",
+  "Motion.TagPlaceholder": "Comma-separated. Example: happy, joy, delighted",
+  "Motion.Tag.Neutral": "Tags for Neutral",
+  "Motion.Tag.Happy": "Tags for Happy",
+  "Motion.Tag.Sad": "Tags for Sad",
+  "Motion.Tag.Angry": "Tags for Angry",
+  "Motion.Tag.Relaxed": "Tags for Relaxed",
+  "Motion.Tag.Surprised": "Tags for Surprised"
 }

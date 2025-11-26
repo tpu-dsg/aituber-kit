@@ -79,7 +79,19 @@ interface VRMMotionSettings {
   vrmSurprisedMotion: string
 }
 
-interface ModelProvider extends Live2DSettings, VRMMotionSettings {
+interface EmotionTagSettings {
+  emotionTagsNeutral: string[]
+  emotionTagsHappy: string[]
+  emotionTagsSad: string[]
+  emotionTagsAngry: string[]
+  emotionTagsRelaxed: string[]
+  emotionTagsSurprised: string[]
+}
+
+interface ModelProvider
+  extends Live2DSettings,
+    VRMMotionSettings,
+    EmotionTagSettings {
   selectAIService: AIService
   selectAIModel: string
   localLlmUrl: string
@@ -235,6 +247,15 @@ export type SettingsState = APIKeys &
   Character &
   General &
   ModelType
+
+const parseEnvTags = (value: string | undefined, fallback: string[]) => {
+  if (!value) return fallback
+  const parsed = value
+    .split(',')
+    .map((v) => v.trim())
+    .filter((v) => v.length > 0)
+  return parsed.length > 0 ? parsed : fallback
+}
 
 // Function to get initial values from environment variables
 const getInitialValuesFromEnv = (): SettingsState => ({
@@ -558,6 +579,30 @@ const getInitialValuesFromEnv = (): SettingsState => ({
   vrmAngryMotion: process.env.NEXT_PUBLIC_VRM_ANGRY_MOTION || '',
   vrmRelaxedMotion: process.env.NEXT_PUBLIC_VRM_RELAXED_MOTION || '',
   vrmSurprisedMotion: process.env.NEXT_PUBLIC_VRM_SURPRISED_MOTION || '',
+  emotionTagsNeutral: parseEnvTags(
+    process.env.NEXT_PUBLIC_EMOTION_TAGS_NEUTRAL,
+    ['neutral']
+  ),
+  emotionTagsHappy: parseEnvTags(
+    process.env.NEXT_PUBLIC_EMOTION_TAGS_HAPPY,
+    ['happy']
+  ),
+  emotionTagsSad: parseEnvTags(
+    process.env.NEXT_PUBLIC_EMOTION_TAGS_SAD,
+    ['sad']
+  ),
+  emotionTagsAngry: parseEnvTags(
+    process.env.NEXT_PUBLIC_EMOTION_TAGS_ANGRY,
+    ['angry']
+  ),
+  emotionTagsRelaxed: parseEnvTags(
+    process.env.NEXT_PUBLIC_EMOTION_TAGS_RELAXED,
+    ['relaxed']
+  ),
+  emotionTagsSurprised: parseEnvTags(
+    process.env.NEXT_PUBLIC_EMOTION_TAGS_SURPRISED,
+    ['surprised']
+  ),
 })
 
 const settingsStore = create<SettingsState>()(
@@ -711,6 +756,12 @@ const settingsStore = create<SettingsState>()(
       vrmAngryMotion: state.vrmAngryMotion,
       vrmRelaxedMotion: state.vrmRelaxedMotion,
       vrmSurprisedMotion: state.vrmSurprisedMotion,
+      emotionTagsNeutral: state.emotionTagsNeutral,
+      emotionTagsHappy: state.emotionTagsHappy,
+      emotionTagsSad: state.emotionTagsSad,
+      emotionTagsAngry: state.emotionTagsAngry,
+      emotionTagsRelaxed: state.emotionTagsRelaxed,
+      emotionTagsSurprised: state.emotionTagsSurprised,
       maxPastMessages: state.maxPastMessages,
       useVideoAsBackground: state.useVideoAsBackground,
       showGamePanel: state.showGamePanel,

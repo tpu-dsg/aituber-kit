@@ -1,6 +1,6 @@
 import Image from 'next/image'
-import { useEffect, useRef, useState } from 'react'
-import { EMOTIONS } from '@/features/messages/messages'
+import { useEffect, useMemo, useRef, useState } from 'react'
+import { buildEmotionTagPattern } from '@/features/messages/emotionTags'
 
 import homeStore from '@/features/stores/home'
 import settingsStore from '@/features/stores/settings'
@@ -127,7 +127,19 @@ const Chat = ({
   message: string
   characterName: string
 }) => {
-  const emotionPattern = new RegExp(`\\[(${EMOTIONS.join('|')})\\]\\s*`, 'gi')
+  const emotionTags = settingsStore((s) => [
+    s.emotionTagsNeutral,
+    s.emotionTagsHappy,
+    s.emotionTagsSad,
+    s.emotionTagsAngry,
+    s.emotionTagsRelaxed,
+    s.emotionTagsSurprised,
+  ])
+  const emotionPattern = useMemo(
+    () => buildEmotionTagPattern(),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [emotionTags]
+  )
   const processedMessage = message.replace(emotionPattern, '')
 
   const roleColor =

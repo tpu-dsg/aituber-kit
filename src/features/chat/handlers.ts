@@ -12,6 +12,7 @@ import i18next from 'i18next'
 import toastStore from '@/features/stores/toast'
 import { generateMessageId } from '@/utils/messageUtils'
 import { isMultiModalAvailable } from '@/features/constants/aiModels'
+import { findEmotionByTag } from '@/features/messages/emotionTags'
 
 // セッションIDを生成する関数
 const generateSessionId = () => generateMessageId()
@@ -172,7 +173,7 @@ const handleSpeakAndStateUpdate = (
 ) => {
   const hs = homeStore.getState()
   const emotion = emotionTag.includes('[')
-    ? (emotionTag.slice(1, -1).toLowerCase() as EmotionType)
+    ? findEmotionByTag(emotionTag) || 'neutral'
     : 'neutral'
 
   // 発話不要/不可能な文字列だった場合はスキップ

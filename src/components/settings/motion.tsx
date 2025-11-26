@@ -24,6 +24,51 @@ const motionFields: MotionField[] = [
   { key: 'vrmSurprisedMotion', labelKey: 'Motion.Surprised' },
 ]
 
+type TagField = {
+  key:
+    | 'emotionTagsNeutral'
+    | 'emotionTagsHappy'
+    | 'emotionTagsSad'
+    | 'emotionTagsAngry'
+    | 'emotionTagsRelaxed'
+    | 'emotionTagsSurprised'
+  labelKey: string
+  placeholder: string
+}
+
+const tagFields: TagField[] = [
+  {
+    key: 'emotionTagsNeutral',
+    labelKey: 'Motion.Tag.Neutral',
+    placeholder: 'neutral,無表情',
+  },
+  {
+    key: 'emotionTagsHappy',
+    labelKey: 'Motion.Tag.Happy',
+    placeholder: 'happy,嬉しい',
+  },
+  {
+    key: 'emotionTagsSad',
+    labelKey: 'Motion.Tag.Sad',
+    placeholder: 'sad,かなしい',
+  },
+  {
+    key: 'emotionTagsAngry',
+    labelKey: 'Motion.Tag.Angry',
+    placeholder: 'angry,おこ',
+  },
+  {
+    key: 'emotionTagsRelaxed',
+    labelKey: 'Motion.Tag.Relaxed',
+    placeholder: 'relaxed,のんびり',
+  },
+  {
+    key: 'emotionTagsSurprised',
+    labelKey: 'Motion.Tag.Surprised',
+    placeholder: 'surprised,びっくり',
+  },
+]
+
 const normalizePath = (path: string) => {
   if (!path) return ''
   return path.startsWith('/') ? path : `/${path}`
@@ -64,6 +109,14 @@ const Motion = () => {
     settingsStore.setState({ [key]: normalizePath(value) })
   }
 
+  const handleTagChange = (key: TagField['key'], value: string) => {
+    const tags = value
+      .split(',')
+      .map((v) => v.trim())
+      .filter((v) => v.length > 0)
+    settingsStore.setState({ [key]: tags })
+  }
+
   return (
     <div className="space-y-6">
       <div className="flex items-start justify-between gap-4">
@@ -88,6 +141,34 @@ const Motion = () => {
           {t('Motion.EmptyList')}
         </div>
       )}
+
+      <div className="space-y-3 bg-white rounded-lg p-4 border border-gray-200">
+        <div>
+          <div className="text-lg font-bold">{t('Motion.TagSettings')}</div>
+          <p className="text-sm text-gray-700 whitespace-pre-line">
+            {t('Motion.TagSettingsInfo')}
+          </p>
+        </div>
+        <div className="grid gap-3">
+          {tagFields.map((field) => (
+            <div key={field.key} className="space-y-1">
+              <label className="font-semibold block">
+                {t(field.labelKey)}
+              </label>
+              <input
+                type="text"
+                className="w-full px-3 py-2 rounded-lg bg-white text-sm border border-gray-200"
+                value={store[field.key].join(', ')}
+                onChange={(e) => handleTagChange(field.key, e.target.value)}
+                placeholder={field.placeholder}
+              />
+              <p className="text-xs text-gray-600">
+                {t('Motion.TagPlaceholder')}
+              </p>
+            </div>
+          ))}
+        </div>
+      </div>
 
       <div className="grid gap-4">
         {motionFields.map((field) => {
