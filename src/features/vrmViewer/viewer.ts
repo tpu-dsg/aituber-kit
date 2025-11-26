@@ -1,7 +1,5 @@
 import * as THREE from 'three'
 import { Model } from './model'
-import { loadVRMAnimation } from '@/lib/VRMAnimation/loadVRMAnimation'
-import { buildUrl } from '@/utils/buildUrl'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import settingsStore from '@/features/stores/settings'
 
@@ -66,8 +64,9 @@ export class Viewer {
 
       this._scene.add(this.model.vrm.scene)
 
-      const vrma = await loadVRMAnimation(buildUrl('/idle_loop.vrma'))
-      if (vrma) this.model.loadAnimation(vrma)
+      const idleMotion =
+        settingsStore.getState().vrmIdleMotion || '/idle_loop.vrma'
+      await this.model.setIdleMotion(idleMotion)
 
       // HACK: アニメーションの原点がずれているので再生後にカメラ位置を調整する
       requestAnimationFrame(() => {

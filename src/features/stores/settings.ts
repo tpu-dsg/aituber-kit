@@ -69,7 +69,17 @@ interface Live2DSettings {
   surprisedMotionGroup: string
 }
 
-interface ModelProvider extends Live2DSettings {
+interface VRMMotionSettings {
+  vrmIdleMotion: string
+  vrmNeutralMotion: string
+  vrmHappyMotion: string
+  vrmSadMotion: string
+  vrmAngryMotion: string
+  vrmRelaxedMotion: string
+  vrmSurprisedMotion: string
+}
+
+interface ModelProvider extends Live2DSettings, VRMMotionSettings {
   selectAIService: AIService
   selectAIModel: string
   localLlmUrl: string
@@ -540,6 +550,14 @@ const getInitialValuesFromEnv = (): SettingsState => ({
   angryMotionGroup: process.env.NEXT_PUBLIC_ANGRY_MOTION_GROUP || '',
   relaxedMotionGroup: process.env.NEXT_PUBLIC_RELAXED_MOTION_GROUP || '',
   surprisedMotionGroup: process.env.NEXT_PUBLIC_SURPRISED_MOTION_GROUP || '',
+  vrmIdleMotion:
+    process.env.NEXT_PUBLIC_VRM_IDLE_MOTION || '/idle_loop.vrma',
+  vrmNeutralMotion: process.env.NEXT_PUBLIC_VRM_NEUTRAL_MOTION || '',
+  vrmHappyMotion: process.env.NEXT_PUBLIC_VRM_HAPPY_MOTION || '',
+  vrmSadMotion: process.env.NEXT_PUBLIC_VRM_SAD_MOTION || '',
+  vrmAngryMotion: process.env.NEXT_PUBLIC_VRM_ANGRY_MOTION || '',
+  vrmRelaxedMotion: process.env.NEXT_PUBLIC_VRM_RELAXED_MOTION || '',
+  vrmSurprisedMotion: process.env.NEXT_PUBLIC_VRM_SURPRISED_MOTION || '',
 })
 
 const settingsStore = create<SettingsState>()(
@@ -686,6 +704,13 @@ const settingsStore = create<SettingsState>()(
       angryMotionGroup: state.angryMotionGroup,
       relaxedMotionGroup: state.relaxedMotionGroup,
       surprisedMotionGroup: state.surprisedMotionGroup,
+      vrmIdleMotion: state.vrmIdleMotion,
+      vrmNeutralMotion: state.vrmNeutralMotion,
+      vrmHappyMotion: state.vrmHappyMotion,
+      vrmSadMotion: state.vrmSadMotion,
+      vrmAngryMotion: state.vrmAngryMotion,
+      vrmRelaxedMotion: state.vrmRelaxedMotion,
+      vrmSurprisedMotion: state.vrmSurprisedMotion,
       maxPastMessages: state.maxPastMessages,
       useVideoAsBackground: state.useVideoAsBackground,
       showGamePanel: state.showGamePanel,

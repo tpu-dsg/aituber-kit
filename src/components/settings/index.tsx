@@ -17,6 +17,7 @@ import Log from './log'
 import Other from './other'
 import SpeechInput from './speechInput'
 import Images from './images'
+import Motion from './motion'
 
 type Props = {
   onClickClose: () => void
@@ -61,6 +62,7 @@ type TabKey =
   | 'log'
   | 'other'
   | 'speechInput'
+  | 'motion'
 
 // アイコンのパスマッピング
 const tabIconMapping: Record<TabKey, string> = {
@@ -76,6 +78,7 @@ const tabIconMapping: Record<TabKey, string> = {
   log: '/images/setting-icons/conversation-history.svg',
   other: '/images/setting-icons/other-settings.svg',
   speechInput: '/images/setting-icons/microphone-settings.svg',
+  motion: '/images/setting-icons/motion-settings.svg',
 }
 
 const Main = () => {
@@ -131,6 +134,10 @@ const Main = () => {
       label: t('VoiceSettings'),
     },
     {
+      key: 'motion',
+      label: t('MotionSettings'),
+    },
+    {
       key: 'speechInput',
       label: t('SpeechInputSettings'),
     },
@@ -172,6 +179,8 @@ const Main = () => {
         return <AI />
       case 'voice':
         return <Voice />
+      case 'motion':
+        return <Motion />
       case 'game':
         return <Game />
       case 'youtube':
