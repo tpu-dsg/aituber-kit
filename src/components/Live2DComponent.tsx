@@ -33,6 +33,18 @@ const setModelPosition = (
   }
 }
 
+const getContainerSize = (canvasEl: HTMLCanvasElement | null) => {
+  if (!canvasEl) {
+    return { width: window.innerWidth, height: window.innerHeight }
+  }
+
+  const target = canvasEl.parentElement ?? canvasEl
+  return {
+    width: target.clientWidth || window.innerWidth,
+    height: target.clientHeight || window.innerHeight,
+  }
+}
+
 const Live2DComponent = (): JSX.Element => {
   console.log('Live2DComponent rendering')
 
@@ -102,17 +114,19 @@ const Live2DComponent = (): JSX.Element => {
   }, [model, app, fixPosition, unfixPosition, resetPosition])
 
   useEffect(() => {
-    initApp()
+    if (!app) {
+      initApp()
+      return
+    }
+
     return () => {
       if (modelRef.current) {
         modelRef.current.destroy()
         modelRef.current = null
       }
-      if (app) {
-        app.destroy(true)
-      }
+      app.destroy(true)
     }
-  }, [])
+  }, [app, initApp])
 
   useEffect(() => {
     if (app && selectedLive2DPath) {
@@ -130,19 +144,21 @@ const Live2DComponent = (): JSX.Element => {
     }
   }, [app, selectedLive2DPath])
 
-  const initApp = () => {
+  const initApp = useCallback(() => {
     if (!canvasContainerRef.current) return
 
+    const { width, height } = getContainerSize(canvasContainerRef.current)
+
     const app = new Application({
-      width: window.innerWidth,
-      height: window.innerHeight,
+      width,
+      height,
       view: canvasContainerRef.current,
       backgroundAlpha: 0,
       antialias: true,
     })
 
     setApp(app)
-  }
+  }, [])
 
   const loadLive2DModel = async (
     currentApp: Application,
@@ -336,32 +352,55 @@ const Live2DComponent = (): JSX.Element => {
       canvas.removeEventListener('touchmove', handleTouchMove)
       canvas.removeEventListener('touchend', handleTouchEnd)
     }
-  }, [model, isDragging, dragOffset, pinchDistance, initialScale])
+  }, [
+    model,
+    isDragging,
+    dragOffset,
+    pinchDistance,
+    initialScale,
+    saveModelPosition,
+  ])
 
   useEffect(() => {
-    if (!app || !model) return
+    if (!app) return
 
-    const onResize = debounce(() => {
-      if (!canvasContainerRef.current) return
+    const handleResize = debounce(() => {
+      const canvasEl = canvasContainerRef.current
+      if (!canvasEl) return
 
-      app.renderer.resize(
-        canvasContainerRef.current.clientWidth,
-        canvasContainerRef.current.clientHeight
-      )
+      const { width, height } = getContainerSize(canvasEl)
+      app.renderer.resize(width, height)
 
-      setModelPosition(app, model)
-    }, 250)
+      if (modelRef.current) {
+        setModelPosition(app, modelRef.current)
+      }
+    }, 150)
 
-    window.addEventListener('resize', onResize)
+    const observerTarget =
+      canvasContainerRef.current?.parentElement || canvasContainerRef.current
+
+    handleResize()
+
+    if (typeof ResizeObserver !== 'undefined' && observerTarget) {
+      const resizeObserver = new ResizeObserver(() => handleResize())
+      resizeObserver.observe(observerTarget)
+
+      return () => {
+        resizeObserver.disconnect()
+        handleResize.cancel()
+      }
+    }
+
+    window.addEventListener('resize', handleResize)
 
     return () => {
-      window.removeEventListener('resize', onResize)
-      onResize.cancel() // クリーンアップ時にデバウンスをキャンセル
+      window.removeEventListener('resize', handleResize)
+      handleResize.cancel()
     }
-  }, [app, model])
+  }, [app])
 
   return (
-    <div className="w-screen h-screen">
+    <div className="w-full h-full">
       <canvas
         ref={canvasContainerRef}
         className="w-full h-full"
